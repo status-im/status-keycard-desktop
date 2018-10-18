@@ -48,7 +48,7 @@ public class Main {
     System.out.println("GET STATUS response: " + Hex.toHexString(resp.getData()));
 
     // PIN authentication allows execution of privileged commands
-    cmdSet.verifyPIN("000000");
+    checkOK(cmdSet.verifyPIN("000000"));
 
     // Cleanup, in a real application you would not unpair and instead keep the pairing key for successive interactions.
     // We also remove all other pairings so that we do not fill all slots with failing runs. Again in real application
