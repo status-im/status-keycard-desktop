@@ -280,8 +280,8 @@ public class SecureChannelSession {
    * @throws CardException communication error
    */
   public ResponseAPDU pair(CardChannel apduChannel, byte p1, byte[] data) throws CardException {
-    CommandAPDU openSecureChannel = new CommandAPDU(0x80, INS_PAIR, p1, 0, data);
-    return transmit(apduChannel, openSecureChannel);
+    CommandAPDU pair = new CommandAPDU(0x80, INS_PAIR, p1, 0, data);
+    return transmit(apduChannel, pair);
   }
 
   /**
@@ -293,8 +293,8 @@ public class SecureChannelSession {
    * @throws CardException communication error
    */
   public ResponseAPDU unpair(CardChannel apduChannel, byte p1) throws CardException {
-    CommandAPDU openSecureChannel = protectedCommand(0x80, INS_UNPAIR, p1, 0, new byte[0]);
-    return transmit(apduChannel, openSecureChannel);
+    CommandAPDU unpair = protectedCommand(0x80, INS_UNPAIR, p1, 0, new byte[0]);
+    return transmit(apduChannel, unpair);
   }
 
   /**
@@ -307,8 +307,8 @@ public class SecureChannelSession {
   public void unpairOthers(CardChannel apduChannel) throws CardException {
     for (int i = 0; i < PAIRING_MAX_CLIENT_COUNT; i++) {
       if (i != pairingIndex) {
-        CommandAPDU openSecureChannel = protectedCommand(0x80, INS_UNPAIR, i, 0, new byte[0]);
-        ResponseAPDU resp = transmit(apduChannel, openSecureChannel);
+        CommandAPDU unpair = protectedCommand(0x80, INS_UNPAIR, i, 0, new byte[0]);
+        ResponseAPDU resp = transmit(apduChannel, unpair);
 
         if (resp.getSW() != 0x9000) {
           throw new CardException("Unpairing failed");
