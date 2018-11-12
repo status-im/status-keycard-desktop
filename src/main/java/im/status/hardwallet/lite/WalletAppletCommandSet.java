@@ -92,6 +92,7 @@ public class WalletAppletCommandSet {
 
     if (resp.getSW() == 0x9000) {
       this.secureChannel.generateSecret(extractPublicKeyFromSelect(resp.getData()));
+      this.secureChannel.reset();
     }
 
     return resp;
