@@ -57,7 +57,7 @@ public class WalletAppletCommandSet {
 
 
   public static final String APPLET_AID = "53746174757357616C6C6574417070";
-  public static final byte[] APPLET_AID_BYTES = Hex.decode(APPLET_AID);
+  static final byte[] APPLET_AID_BYTES = Hex.decode(APPLET_AID);
 
   private final CardChannel apduChannel;
   private SecureChannelSession secureChannel;
@@ -74,6 +74,10 @@ public class WalletAppletCommandSet {
     this.apduChannel = apduChannel;
   }
 
+  protected void setSecureChannel(SecureChannelSession secureChannel) {
+    this.secureChannel = secureChannel;
+  }
+
   /**
    * Selects the applet. The applet is assumed to have been installed with its default AID. The returned data is a
    * public key which must be used to initialize the secure channel.
@@ -87,7 +91,12 @@ public class WalletAppletCommandSet {
 
     if (resp.getSW() == 0x9000) {
       byte[] keyData = extractPublicKeyFromSelect(resp.getData());
-      this.secureChannel = new SecureChannelSession(keyData);
+
+      if (this.secureChannel == null) {
+        setSecureChannel(new SecureChannelSession(keyData));
+      } else {
+        this.secureChannel.generateSecret(keyData);
+      }
     }
 
     return resp;
