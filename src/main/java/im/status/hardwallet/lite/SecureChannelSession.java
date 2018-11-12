@@ -455,7 +455,7 @@ public class SecureChannelSession {
    * would only make things wrong.
    *
    */
-  void setOpen() {
+  protected void setOpen() {
     open = true;
   }
 
