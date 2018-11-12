@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class WalletAppletCommandSet {
   static final byte INS_INIT = (byte) 0xFE;
   static final byte INS_GET_STATUS = (byte) 0xF2;
-  static final byte INS_SET_NDEF = (byte) 0xF2;
+  static final byte INS_SET_NDEF = (byte) 0xF3;
   static final byte INS_VERIFY_PIN = (byte) 0x20;
   static final byte INS_CHANGE_PIN = (byte) 0x21;
   static final byte INS_UNBLOCK_PIN = (byte) 0x22;
