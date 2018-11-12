@@ -51,17 +51,19 @@ public class SecureChannelSession {
   private boolean open;
 
   /**
-   * Constructs a SecureChannel session on the client. The client should generate a fresh key pair for each session.
-   * The public key of the card is used as input for the EC-DH algorithm. The output is stored as the secret.
-   *
-   * @param keyData the public key returned by the applet as response to the SELECT command
+   * Constructs a SecureChannel session on the client.
    */
-  public SecureChannelSession(byte[] keyData) {
+  public SecureChannelSession() {
       random = new SecureRandom();
-      generateSecret(keyData);
       open = false;
   }
 
+  /**
+   * Generates a pairing secret. This should be called before each session. The public key of the card is used as input
+   * for the EC-DH algorithm. The output is stored as the secret.
+   *
+   * @param keyData the public key returned by the applet as response to the SELECT command
+   */
   public void generateSecret(byte[] keyData) {
     try {
       ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256k1");
@@ -81,7 +83,6 @@ public class SecureChannelSession {
       secret = keyAgreement.generateSecret();
     } catch (Exception e) {
       throw new RuntimeException("Is BouncyCastle in the classpath?", e);
-
     }
   }
 

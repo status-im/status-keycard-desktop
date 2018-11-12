@@ -72,6 +72,7 @@ public class WalletAppletCommandSet {
 
   public WalletAppletCommandSet(CardChannel apduChannel) {
     this.apduChannel = apduChannel;
+    this.secureChannel = new SecureChannelSession();
   }
 
   protected void setSecureChannel(SecureChannelSession secureChannel) {
@@ -90,13 +91,7 @@ public class WalletAppletCommandSet {
     ResponseAPDU resp =  apduChannel.transmit(selectApplet);
 
     if (resp.getSW() == 0x9000) {
-      byte[] keyData = extractPublicKeyFromSelect(resp.getData());
-
-      if (this.secureChannel == null) {
-        setSecureChannel(new SecureChannelSession(keyData));
-      } else {
-        this.secureChannel.generateSecret(keyData);
-      }
+      this.secureChannel.generateSecret(extractPublicKeyFromSelect(resp.getData()));
     }
 
     return resp;
