@@ -32,6 +32,7 @@ public class WalletAppletCommandSet {
   static final byte INS_GENERATE_MNEMONIC = (byte) 0xD2;
   static final byte INS_REMOVE_KEY = (byte) 0xD3;
   static final byte INS_GENERATE_KEY = (byte) 0xD4;
+  static final byte INS_DUPLICATE_KEY = (byte) 0xD5;
   static final byte INS_SIGN = (byte) 0xC0;
   static final byte INS_SET_PINLESS_PATH = (byte) 0xC1;
   static final byte INS_EXPORT_KEY = (byte) 0xC2;
@@ -526,7 +527,7 @@ public class WalletAppletCommandSet {
    * @throws CardException communication error
    */
   public ResponseAPDU duplicateKeyStart(int entropyCount, byte[] firstEntropy) throws CardException {
-    CommandAPDU duplicateKeyStart = secureChannel.protectedCommand(0x80, INS_EXPORT_KEY, DUPLICATE_KEY_P1_START, entropyCount, firstEntropy);
+    CommandAPDU duplicateKeyStart = secureChannel.protectedCommand(0x80, INS_DUPLICATE_KEY, DUPLICATE_KEY_P1_START, entropyCount, firstEntropy);
     return secureChannel.transmit(apduChannel, duplicateKeyStart);
   }
 
@@ -538,8 +539,8 @@ public class WalletAppletCommandSet {
    * @return the raw card response
    * @throws CardException communication error
    */
-  public ResponseAPDU duplicateAddEntropy(byte[] entropy) throws CardException {
-    CommandAPDU duplicateKeyAddEntropy = new CommandAPDU(0x80, INS_EXPORT_KEY, DUPLICATE_KEY_P1_ADD_ENTROPY, 0, secureChannel.oneShotEncrypt(entropy));
+  public ResponseAPDU duplicateKeyAddEntropy(byte[] entropy) throws CardException {
+    CommandAPDU duplicateKeyAddEntropy = new CommandAPDU(0x80, INS_DUPLICATE_KEY, DUPLICATE_KEY_P1_ADD_ENTROPY, 0, secureChannel.oneShotEncrypt(entropy));
     return apduChannel.transmit(duplicateKeyAddEntropy);
   }
 
@@ -550,7 +551,7 @@ public class WalletAppletCommandSet {
    * @throws CardException communication error
    */
   public ResponseAPDU duplicateKeyExport() throws CardException {
-    CommandAPDU duplicateKeyExport = secureChannel.protectedCommand(0x80, INS_EXPORT_KEY, DUPLICATE_KEY_P1_EXPORT, 0, new byte[0]);
+    CommandAPDU duplicateKeyExport = secureChannel.protectedCommand(0x80, INS_DUPLICATE_KEY, DUPLICATE_KEY_P1_EXPORT, 0, new byte[0]);
     return secureChannel.transmit(apduChannel, duplicateKeyExport);
   }
 
@@ -563,7 +564,7 @@ public class WalletAppletCommandSet {
    * @throws CardException communication error
    */
   public ResponseAPDU duplicateKeyImport(byte[] key) throws CardException {
-    CommandAPDU duplicateKeyImport = secureChannel.protectedCommand(0x80, INS_EXPORT_KEY, DUPLICATE_KEY_P1_IMPORT, 0, key);
+    CommandAPDU duplicateKeyImport = secureChannel.protectedCommand(0x80, INS_DUPLICATE_KEY, DUPLICATE_KEY_P1_IMPORT, 0, key);
     return secureChannel.transmit(apduChannel, duplicateKeyImport);
   }
 
