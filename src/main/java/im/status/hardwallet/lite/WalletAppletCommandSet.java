@@ -52,6 +52,10 @@ public class WalletAppletCommandSet {
   static final byte DUPLICATE_KEY_P1_EXPORT = 0x02;
   static final byte DUPLICATE_KEY_P1_IMPORT = 0x03;
 
+  static final byte EXPORT_KEY_P1_CURRENT = 0x00;
+  static final byte EXPORT_KEY_P1_DERIVE = 0x01;
+  static final byte EXPORT_KEY_P1_DERIVE_AND_MAKE_CURRENT = 0x02;
+
   static final byte EXPORT_KEY_P2_PRIVATE_AND_PUBLIC = 0x00;
   static final byte EXPORT_KEY_P2_PUBLIC_ONLY = 0x01;
 
@@ -504,16 +508,42 @@ public class WalletAppletCommandSet {
   }
 
   /**
-   * Sends an EXPORT KEY APDU. The keyPathIndex is used as P1. Valid values are defined in the applet itself
+   * Sends an EXPORT KEY APDU to export the current key.
    *
-   * @param keyPathIndex the P1 parameter
+   * @param publicOnly exports only the public key
+   * @return the raw card reponse
+   * @throws CardException communication error
+   */
+  public ResponseAPDU exportCurrentKey(boolean publicOnly) throws CardException {
+    return exportKey(EXPORT_KEY_P1_CURRENT, publicOnly, new byte[0]);
+  }
+
+  /**
+   * Sends an EXPORT KEY APDU. Performs derivation of the given keypath and optionally makes it the current key.
+   *
+   * @param keyPath the keypath to export
+   * @param makeCurrent if the key should be made current or not
    * @param publicOnly the P2 parameter
    * @return the raw card response
    * @throws CardException communication error
    */
-  public ResponseAPDU exportKey(byte keyPathIndex, boolean publicOnly) throws CardException {
+  public ResponseAPDU exportKey(byte[] keyPath, boolean makeCurrent, boolean publicOnly) throws CardException {
+    byte p1 = makeCurrent ? EXPORT_KEY_P1_DERIVE_AND_MAKE_CURRENT : EXPORT_KEY_P1_DERIVE;
+    return exportKey(p1, publicOnly, keyPath);
+  }
+
+  /**
+   * Sends an EXPORT KEY APDU. The parameters are sent as-is.
+   *
+   * @param derivationOptions the P1 parameter
+   * @param publicOnly the P2 parameter
+   * @param keypath the data parameter
+   * @return the raw card response
+   * @throws CardException communication error
+   */
+  public ResponseAPDU exportKey(int derivationOptions, boolean publicOnly, byte[] keypath) throws CardException {
     byte p2 = publicOnly ? EXPORT_KEY_P2_PUBLIC_ONLY : EXPORT_KEY_P2_PRIVATE_AND_PUBLIC;
-    CommandAPDU exportKey = secureChannel.protectedCommand(0x80, INS_EXPORT_KEY, keyPathIndex, p2, new byte[0]);
+    CommandAPDU exportKey = secureChannel.protectedCommand(0x80, INS_EXPORT_KEY, derivationOptions, p2, keypath);
     return secureChannel.transmit(apduChannel, exportKey);
   }
 
