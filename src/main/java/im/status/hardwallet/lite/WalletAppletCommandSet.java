@@ -522,13 +522,14 @@ public class WalletAppletCommandSet {
    * Sends an EXPORT KEY APDU. Performs derivation of the given keypath and optionally makes it the current key.
    *
    * @param keyPath the keypath to export
+   * @param source the source for derivation
    * @param makeCurrent if the key should be made current or not
    * @param publicOnly the P2 parameter
    * @return the raw card response
    * @throws CardException communication error
    */
-  public ResponseAPDU exportKey(byte[] keyPath, boolean makeCurrent, boolean publicOnly) throws CardException {
-    byte p1 = makeCurrent ? EXPORT_KEY_P1_DERIVE_AND_MAKE_CURRENT : EXPORT_KEY_P1_DERIVE;
+  public ResponseAPDU exportKey(byte[] keyPath, byte source, boolean makeCurrent, boolean publicOnly) throws CardException {
+    byte p1 = (byte) (source | (makeCurrent ? EXPORT_KEY_P1_DERIVE_AND_MAKE_CURRENT : EXPORT_KEY_P1_DERIVE));
     return exportKey(p1, publicOnly, keyPath);
   }
 
