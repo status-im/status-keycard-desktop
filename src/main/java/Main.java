@@ -38,7 +38,7 @@ public class Main {
     checkOK(cmdSet.select());
 
     // In real projects, the pairing key should be saved and used for all new sessions.
-    cmdSet.autoPair("WalletAppletTest");
+    cmdSet.autoPair("KeycardTest");
 
     // Opening a Secure Channel is needed for all other applet commands
     cmdSet.autoOpenSecureChannel();
