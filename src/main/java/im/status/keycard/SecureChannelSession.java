@@ -1,4 +1,4 @@
-package im.status.hardwallet.lite;
+package im.status.keycard;
 
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CBCBlockCipherMac;
