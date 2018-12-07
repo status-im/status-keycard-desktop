@@ -1,4 +1,4 @@
-package im.status.hardwallet.lite;
+package im.status.keycard;
 
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
@@ -20,7 +20,7 @@ import java.util.Arrays;
  * file. Some APDUs map to multiple methods for the sake of convenience since their payload or response require some
  * pre/post processing.
  */
-public class WalletAppletCommandSet {
+public class KeycardCommandSet {
   static final byte INS_INIT = (byte) 0xFE;
   static final byte INS_GET_STATUS = (byte) 0xF2;
   static final byte INS_SET_NDEF = (byte) 0xF3;
@@ -79,7 +79,7 @@ public class WalletAppletCommandSet {
     return resp;
   }
 
-  public WalletAppletCommandSet(CardChannel apduChannel) {
+  public KeycardCommandSet(CardChannel apduChannel) {
     this.apduChannel = apduChannel;
     this.secureChannel = new SecureChannelSession();
   }
@@ -127,7 +127,7 @@ public class WalletAppletCommandSet {
 
     try {
       SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256", "BC");
-      PBEKeySpec spec = new PBEKeySpec(pairingPassword.toCharArray(), "Status Hardware Wallet Lite".getBytes(), 50000, 32 * 8);
+      PBEKeySpec spec = new PBEKeySpec(pairingPassword.toCharArray(), "Keycard Pairing Password Salt".getBytes(), 50000, 32 * 8);
       key = skf.generateSecret(spec);
     } catch (Exception e) {
       throw new RuntimeException("Is Bouncycastle correctly initialized?");

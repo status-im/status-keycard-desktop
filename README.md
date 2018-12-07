@@ -1,2 +1,2 @@
-# hardwallet-lite-sdk
-SDK for the Hardwallet Lite. Work in progress.
+# Keycard Desktop SDK
+Java Desktop SDK for the Keycard. WIP, will share code with the Android SDK

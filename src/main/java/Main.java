@@ -1,10 +1,10 @@
-import im.status.hardwallet.lite.WalletAppletCommandSet;
+import im.status.keycard.KeycardCommandSet;
 import org.bouncycastle.util.encoders.Hex;
 
 import javax.smartcardio.*;
 import java.security.Security;
 
-import static im.status.hardwallet.lite.WalletAppletCommandSet.checkOK;
+import static im.status.keycard.KeycardCommandSet.checkOK;
 
 public class Main {
   public static void main(String[] args) throws Exception {
@@ -32,19 +32,19 @@ public class Main {
     CardChannel apduChannel = apduCard.getBasicChannel();
 
     // Applet-specific code
-    WalletAppletCommandSet cmdSet = new WalletAppletCommandSet(apduChannel);
+    KeycardCommandSet cmdSet = new KeycardCommandSet(apduChannel);
 
     // First thing to do is selecting the applet on the card.
     checkOK(cmdSet.select());
 
     // In real projects, the pairing key should be saved and used for all new sessions.
-    cmdSet.autoPair("WalletAppletTest");
+    cmdSet.autoPair("KeycardTest");
 
     // Opening a Secure Channel is needed for all other applet commands
     cmdSet.autoOpenSecureChannel();
 
     // We send a GET STATUS command, which does not require PIN authentication
-    ResponseAPDU resp = checkOK(cmdSet.getStatus(WalletAppletCommandSet.GET_STATUS_P1_APPLICATION));
+    ResponseAPDU resp = checkOK(cmdSet.getStatus(KeycardCommandSet.GET_STATUS_P1_APPLICATION));
     System.out.println("GET STATUS response: " + Hex.toHexString(resp.getData()));
 
     // PIN authentication allows execution of privileged commands
